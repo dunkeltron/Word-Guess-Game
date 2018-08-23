@@ -2,6 +2,7 @@
 // still need to display word length with "_"
 //still need to display letters guessed
 //still need to make layout of site
+
 var wordList = ["banana", "apple", "pineapple", "pear", "peach", "watermelon", "orange", "lemon", "lime"];
 var listIndex;
 var curWord;
@@ -14,19 +15,16 @@ var lettersRevealed = [];
 var wrongGuessesRemaining = 5;
 resetGame();
 
-displayPartial(lettersRevealed);
-displayGuesses(lettersGuessed);
 document.onkeyup = (function (event) {
     curGuess = event.key.toLowerCase();
     if (isAlphaOrParen(curGuess)) {
         if (lettersGuessed.indexOf(curGuess) < 0) {
             lettersGuessed.push(curGuess);
+
             if (guessInWord(curGuess)) {
                 lettersRevealed.push(curGuess);
-                //console.log(lettersRevealed);
                 lettersInWord.splice(lettersInWord.indexOf(curGuess), 1);
-                //displayLetters(lettersRevealed);
-                //console.log("lIW= " + lettersInWord);
+                console.log("lIW= " + lettersInWord);
                 if (lettersInWord.length == 0) {
                     //display winner
                     console.log("You correctly guessed the word " + curWord + "!");
@@ -38,7 +36,9 @@ document.onkeyup = (function (event) {
             else {
                 wrongGuessesRemaining--;
                 console.log(lettersGuessed);
-                if (wrongGuessesRemaining < 0) {
+                document.getElementById("guesses-remaining-text").innerHTML="";
+                document.getElementById("guesses-remaining-text").innerHTML="Wrong guesses remaining "+wrongGuessesRemaining;
+                if (wrongGuessesRemaining <= 0) {
                     //display loser
                     console.log("Unlucky! The word was " + curWord + ".");
                     losses++;
@@ -59,6 +59,7 @@ document.onkeyup = (function (event) {
 function isAlphaOrParen(str) {
     return /^[a-zA-Z]/.test(str);
 }
+
 function guessInWord(str1) {
     for (i = 0; i < curWord.length; i++) {
         if (str1 == curWord[i]) {
@@ -71,6 +72,7 @@ function guessInWord(str1) {
 }
 function uniqueLetters(str) {
     //console.log(str);
+    lettersInWord=[];
     for (i = 0; i < str.length; i++) {
         if (lettersInWord.indexOf(str[i]) < 0) {
             lettersInWord.push(str[i]);
@@ -81,22 +83,34 @@ function uniqueLetters(str) {
 function displayGuesses(arr) {
     var str = "";
     for (i = 0; i < arr.length; i++) {
-        str = str + arr[i];
+        str = str + arr[i]+ " ";
 
     }
     console.log("Letters Guessed: " + str);
+    document.getElementById("letters-text").innerHTML="";
+    document.getElementById("letters-text").append(str);
 }
 function displayPartial(arr) {
     var str = "";
     for (i = 0; i < curWord.length; i++) {
         if (arr.indexOf(curWord[i]) >= 0) {
-            str = str + curWord[i];
+            str = str + " " + curWord[i] + " ";
+            //console.log(box);
+            //box.text(str + " "+curWord[i]+" " )
         }
         else {
-            str = str + "_";
+            str = str + " _ ";
+            //   console.log(box);
+            //   box.append(str + " ");
         }
     }
-    console.log(str);
+    console.log(str)
+
+    var box = document.getElementById("word-box");
+    console.log(box);
+    
+    document.getElementById("word-box-text").innerHTML="";
+    document.getElementById("word-box-text").append(str);
 }
 
 function resetGame() {
@@ -110,5 +124,11 @@ function resetGame() {
     lettersGuessed = [];
     curGuess = "";
     lettersRevealed = [];
-    wrongGuessesRemaining = 5;
+    wrongGuessesRemaining = 15;
+    document.getElementById("word-box-text").innerHTML= "";
+    document.getElementById("guesses-remaining-text").innerHTML="Wrong guesses remaining "+wrongGuessesRemaining;
+    document.getElementById("losses-box").innerHTML="Losses: "+losses;
+    document.getElementById("wins-box").innerHTML="Wins: "+wins;
+    displayPartial(lettersRevealed);
+    displayGuesses(lettersGuessed);
 }
