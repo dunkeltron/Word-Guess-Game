@@ -13,6 +13,7 @@ var wins = 0;
 var losses = 0;
 var lettersRevealed = [];
 var wrongGuessesRemaining = 5;
+var imgSrc;
 resetGame();
 
 document.onkeyup = (function (event) {
@@ -24,31 +25,35 @@ document.onkeyup = (function (event) {
             if (guessInWord(curGuess)) {
                 lettersRevealed.push(curGuess);
                 lettersInWord.splice(lettersInWord.indexOf(curGuess), 1);
-                console.log("lIW= " + lettersInWord);
+                // console.log("lIW= " + lettersInWord);
                 if (lettersInWord.length == 0) {
                     //display winner
-                    console.log("You correctly guessed the word " + curWord + "!");
+                     displayText("You correctly guessed the word " + curWord + "!");
                     wins++;
-                    console.log("Wins: " + wins + " Losses: " + losses);
+                    imgSrc = "assets/images/" + curWord + ".jpg";
+                    //console.log(imgSrc);
+                    document.getElementById("photo").src = imgSrc;
+                    document.getElementById("photo").alt = "picture of " + curWord;
+                   // console.log("Wins: " + wins + " Losses: " + losses);
                     resetGame();
                 }
             }
             else {
                 wrongGuessesRemaining--;
-                console.log(lettersGuessed);
-                document.getElementById("guesses-remaining-text").innerHTML="";
-                document.getElementById("guesses-remaining-text").innerHTML="Wrong guesses remaining "+wrongGuessesRemaining;
+                //console.log(lettersGuessed);
+                document.getElementById("guesses-remaining-text").innerHTML = "";
+                document.getElementById("guesses-remaining-text").innerHTML = "Wrong guesses remaining " + wrongGuessesRemaining;
                 if (wrongGuessesRemaining <= 0) {
                     //display loser
-                    console.log("Unlucky! The word was " + curWord + ".");
+                    displayText("Unlucky! The word was " + curWord + ".");
+                    imgSrc = "assets/images/" + curWord + ".jpg";
+                    document.getElementById("photo").src = "assets/images/fruit-stand.jpg";
+                    document.getElementById("photo").alt = "Picture of a fruit stand";
                     losses++;
-                    console.log("Wins: " + wins + " Losses: " + losses);
                     resetGame();
                 }
             }
-
             displayPartial(lettersRevealed);
-            //console.log(lettersRevealed);
             displayGuesses(lettersGuessed);
         }
         else {
@@ -56,6 +61,9 @@ document.onkeyup = (function (event) {
         }
     }
 });
+function displayText(str){
+    document.getElementById("top-banner").innerHTML=str;
+}
 function isAlphaOrParen(str) {
     return /^[a-zA-Z]/.test(str);
 }
@@ -63,31 +71,26 @@ function isAlphaOrParen(str) {
 function guessInWord(str1) {
     for (i = 0; i < curWord.length; i++) {
         if (str1 == curWord[i]) {
-            console.log(true);
             return true;
         }
     }
-    console.log(false);
     return false;
 }
 function uniqueLetters(str) {
-    //console.log(str);
-    lettersInWord=[];
+    lettersInWord = [];
     for (i = 0; i < str.length; i++) {
         if (lettersInWord.indexOf(str[i]) < 0) {
-            lettersInWord.push(str[i]);
-            // console.log(lettersInWord);
+            lettersInWord.push(str[i]);;
         }
     }
 }
 function displayGuesses(arr) {
     var str = "";
     for (i = 0; i < arr.length; i++) {
-        str = str + arr[i]+ " ";
-
+        str = str + arr[i] + " ";
     }
-    console.log("Letters Guessed: " + str);
-    document.getElementById("letters-text").innerHTML="";
+    //console.log("Letters Guessed: " + str);
+    document.getElementById("letters-text").innerHTML = "";
     document.getElementById("letters-text").append(str);
 }
 function displayPartial(arr) {
@@ -95,26 +98,21 @@ function displayPartial(arr) {
     for (i = 0; i < curWord.length; i++) {
         if (arr.indexOf(curWord[i]) >= 0) {
             str = str + " " + curWord[i] + " ";
-            //console.log(box);
-            //box.text(str + " "+curWord[i]+" " )
         }
         else {
             str = str + " _ ";
-            //   console.log(box);
-            //   box.append(str + " ");
         }
     }
-    console.log(str)
 
     var box = document.getElementById("word-box");
-    console.log(box);
-    
-    document.getElementById("word-box-text").innerHTML="";
+
+
+    document.getElementById("word-box-text").innerHTML = "";
     document.getElementById("word-box-text").append(str);
 }
 
 function resetGame() {
-    console.log("welcome to word-guess-game");
+    // console.log("welcome to word-guess-game");
     //console.log(wordList.length);
     listIndex = Math.floor(Math.random() * wordList.length);
     //console.log(listIndex);
@@ -125,10 +123,10 @@ function resetGame() {
     curGuess = "";
     lettersRevealed = [];
     wrongGuessesRemaining = 15;
-    document.getElementById("word-box-text").innerHTML= "";
-    document.getElementById("guesses-remaining-text").innerHTML="Wrong guesses remaining "+wrongGuessesRemaining;
-    document.getElementById("losses-box").innerHTML="Losses: "+losses;
-    document.getElementById("wins-box").innerHTML="Wins: "+wins;
+    document.getElementById("word-box-text").innerHTML = "";
+    document.getElementById("guesses-remaining-text").innerHTML = "Wrong guesses remaining " + wrongGuessesRemaining;
+    document.getElementById("losses-box").innerHTML = "Losses: " + losses;
+    document.getElementById("wins-box").innerHTML = "Wins: " + wins;
     displayPartial(lettersRevealed);
     displayGuesses(lettersGuessed);
 }
