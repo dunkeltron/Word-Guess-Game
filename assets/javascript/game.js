@@ -18,7 +18,8 @@ resetGame();
 
 document.onkeyup = (function (event) {
     curGuess = event.key.toLowerCase();
-    if (isAlphaOrParen(curGuess)) {
+    console.log(curGuess);
+    if (isAlphaOrParen(curGuess)&&curGuess.length==1) {
         if (lettersGuessed.indexOf(curGuess) < 0) {
             lettersGuessed.push(curGuess);
 
